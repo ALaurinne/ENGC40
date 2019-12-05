@@ -108,7 +108,7 @@ begin
             begin
                 stateF = Save_Ram_S;
                 nextA = addrsS;
-                memS = memData;
+                memClock = 1;
             end
 
         Save_Ram_S: // Armazena o valor do segundo local
