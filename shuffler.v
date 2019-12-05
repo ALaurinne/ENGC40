@@ -2,7 +2,6 @@ module shuffler
 (
     input start, // Recebe da FSM
     input [3:0] memData, // Recebe da memoria Ram
-    input [5:0] addrsS, // Recebe do contador
     input clock,
 
     output reg [5:0] nextA, // Envia para a memoria
@@ -16,7 +15,7 @@ module shuffler
 
 reg [3:0] memF; // Salva a memoria do primeiro
 reg [3:0] memS; // Salva a memoria do segundo
-reg [5:0] addrsSeilá; // Valor do próximo endereço de memoria 
+reg [5:0] addrsS; // Valor do próximo endereço de memoria 
 reg [3:0] stateA, stateF; // Estados Atual e Futuro
 
 parameter   Begin           = 4'b 0000,
@@ -53,17 +52,17 @@ begin
                     addrsF <= addrsF + 1; // Aumenta o valor do primeiro local
 
                 Decrementa_S:
-                    addrsSeilá <= addrsSeilá - 2;
+                    addrsS <= addrsS - 2;
                 
                 Incrementa_S:
-                    addrsSeilá <= addrsSeilá + 4;
+                    addrsS <= addrsS + 4;
             endcase
         end
     else
         begin
             stateA <= Begin; // Caso esteja desativado, deve retornar ao estado inicial.
             addrsF <= 0; // Limpa a variavel do endereço
-            addrsSeilá = 36;
+            addrsS = 36;
         end
 end
 
@@ -97,20 +96,20 @@ begin
         Next_Addrs:
             begin
             stateF = Read_Ram_S;
-            nextA = addrsSeilá;
+            nextA = addrsS;
             end
 
         Read_Ram_S:
             begin
             state F = Save_Ram_S;
-            nextA = addrsSeilá;
+            nextA = addrsS;
             memS = memData;
             end
 
         Save_Ram_S:
             begin
             stateF = Write_S;
-            nextA = addrsSeilá;
+            nextA = addrsS;
             memClock = 1;
             memS = memData;
             end
@@ -147,9 +146,9 @@ begin
 
         Incrementa_F:
             begin
-                if(addrsSeilá<3)
+                if(addrsS<3)
                 stateF = Incrementa_S;
-                else if (addrsSeilá>49)
+                else if (addrsS>49)
                 stateF = Decrementa_S;
             end
 
@@ -171,4 +170,4 @@ begin
             stateF = Shuffled;
             end
 end
-
+endmodule
