@@ -91,6 +91,8 @@ begin
         Save_Ram_F: // Armazena o valor do primeiro local
             begin
                 stateF = Next_Addrs;
+                nextA = addrsF;
+                wren = 1;
                 memF = memData;
             end
 
@@ -111,7 +113,7 @@ begin
             begin
                 stateF = Write_S;
                 nextA = addrsS;
-                memClock = 1;
+                wren = 1;
                 memS = memData;
             end
 
