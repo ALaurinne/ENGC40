@@ -12,6 +12,7 @@ module shuffler
 
 );
 
+reg var_control; // Variavel de controle para Decrementar ou Incrementar. 
 reg [3:0] memF; // Salva a memoria do primeiro
 reg [3:0] memS; // Salva a memoria do segundo
 reg [5:0] addrsF; // Valor do primeiro endereço de memoria 
@@ -63,6 +64,7 @@ begin
             stateA <= Begin; // Caso esteja desativado, deve retornar ao estado inicial.
             addrsF <= 0; // Limpa a variavel do endereço
             addrsS <= 36; // Retorna ao meio da memoria 
+            var_control <= 0;
         end
 end
 
@@ -149,10 +151,15 @@ begin
 
         Incrementa_F: // Incrementa um valor no endereço F e verifica para qual estado o endereço S deve ir 
             begin
-                if(addrsS<3)
+                if(var_control && addrsS<51)
                 stateF = Incrementa_S;
-                else if (addrsS>49)
-                stateF = Decrementa_S;
+                else if (addrsS>1)
+                    begin
+                    stateF = Decrementa_S;
+                    if(addrsS==2){
+                        var_control = 1;
+                    }
+                    end
             end
 
         Incrementa_S: // Incrementa um valor no endereço S
