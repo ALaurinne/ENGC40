@@ -52,17 +52,17 @@ begin
                     addrsF <= addrsF + 1; // Aumenta o valor do primeiro local
 
                 Decrementa_S:
-                    addrsS <= addrsS - 2;
+                    addrsS <= addrsS - 2; // Decrementa o valor do próximo local
                 
                 Incrementa_S:
-                    addrsS <= addrsS + 4;
+                    addrsS <= addrsS + 4; // Incrementa o valor do próximo local
             endcase
         end
     else
         begin
             stateA <= Begin; // Caso esteja desativado, deve retornar ao estado inicial.
             addrsF <= 0; // Limpa a variavel do endereço
-            addrsS = 36;
+            addrsS <= 36; // Retorna ao meio da memoria 
         end
 end
 
@@ -73,40 +73,41 @@ begin
     wren = 0;
     memClock = 0;
     finish = 0;
+    
     case(stateA)
-        Begin:
+        Begin: // Inicia o embaralhador
             begin
                 stateF = Read_Ram_F;
                 nextA = addrsF;
             end
 
-        Read_Ram_F:
+        Read_Ram_F: // Lê o valor no primeiro local
             begin
                 stateF = Save_Ram_F;
                 nextA = addrsF;
                 memClock = 1;
             end
         
-        Save_Ram_F:
+        Save_Ram_F: // Armazena o valor do primeiro local
             begin
                 stateF = Next_Addrs;
                 memF = memData;
             end
 
-        Next_Addrs:
+        Next_Addrs: // Pega o próximo endereço de memoria
             begin
                 stateF = Read_Ram_S;
                 nextA = addrsS;
             end
 
-        Read_Ram_S:
+        Read_Ram_S: // Lê o valor no segundo local
             begin
                 stateF = Save_Ram_S;
                 nextA = addrsS;
                 memS = memData;
             end
 
-        Save_Ram_S:
+        Save_Ram_S: // Armazena o valor do segundo local
             begin
                 stateF = Write_S;
                 nextA = addrsS;
@@ -114,7 +115,7 @@ begin
                 memS = memData;
             end
 
-        Write_S:
+        Write_S: // Sobrescreve o valor do segundo local com a primeira data
             begin
                 stateF = Return_Addrs;
                 memClock = 1;
@@ -122,13 +123,13 @@ begin
                 newData = memF;
             end
 
-        Return_Addrs:
+        Return_Addrs: // Retorna ao endereço do primeiro local 
             begin
                 stateF = Write_F;
                 nextA = addrsF;
             end
 
-        Write_F:
+        Write_F: // Sobrescreve o valor do primeiro local com a segunda data
             begin
                 stateF = Controler;
                 memClock = 1;
@@ -136,7 +137,7 @@ begin
                 newData = memS;
             end
 
-        Controler:
+        Controler: // Verifica se o Embaralhador já pode ser encerrado ou não
             begin
                 if(addrsF<51)
                 stateF = Incrementa_F;
@@ -144,7 +145,7 @@ begin
                 stateF = Shuffled;
             end
 
-        Incrementa_F:
+        Incrementa_F: // Incrementa um valor no endereço F e verifica para qual estado o endereço S deve ir 
             begin
                 if(addrsS<3)
                 stateF = Incrementa_S;
@@ -152,19 +153,19 @@ begin
                 stateF = Decrementa_S;
             end
 
-        Incrementa_S:
+        Incrementa_S: // Incrementa um valor no endereço S
             stateF = Change_Addrs;
 
-        Decrementa_S:
+        Decrementa_S: // Decrementa um valor no endereço S
             stateF = Change_Addrs;
 
-        Change_Addrs:
+        Change_Addrs: // Muda para o endereço com o novo addrsF ( endereço F ) e retorna a Read_Ram_F
             begin
                 stateF = Read_Ram_F;
                 nextA = addrsF;
             end
 
-        Shuffled:
+        Shuffled: // O baralho foi embaralhado e está pronto.
             begin
                 finish = 1;
                 stateF = Shuffled;
