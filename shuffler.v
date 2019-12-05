@@ -5,7 +5,6 @@ module shuffler
     input clock,
 
     output reg [5:0] nextA, // Envia para a memoria
-    output reg [5:0] addrsF, // Envia para o contador
     output reg [3:0] newData, // Envia para a memoria
     output reg wren, // Habilita escrever na memoria
     output reg memClock, 
@@ -15,7 +14,8 @@ module shuffler
 
 reg [3:0] memF; // Salva a memoria do primeiro
 reg [3:0] memS; // Salva a memoria do segundo
-reg [5:0] addrsS; // Valor do próximo endereço de memoria 
+reg [5:0] addrsF; // Valor do primeiro endereço de memoria 
+reg [5:0] addrsS; // Valor do segundo endereço de memoria
 reg [3:0] stateA, stateF; // Estados Atual e Futuro
 
 parameter   Begin           = 4'b 0000,
