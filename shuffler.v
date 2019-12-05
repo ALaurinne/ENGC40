@@ -11,7 +11,7 @@ module shuffler
     output reg memClock, 
     output reg finish // Envia para a FSM
 
-)
+);
 
 reg [3:0] memF; // Salva a memoria do primeiro
 reg [3:0] memS; // Salva a memoria do segundo
@@ -76,64 +76,64 @@ begin
     case(stateA)
         Begin:
             begin
-            stateF = Read_Ram_F;
-            nextA = addrsF;
+                stateF = Read_Ram_F;
+                nextA = addrsF;
             end
 
         Read_Ram_F:
             begin
-            stateF = Save_Ram_F;
-            nextA = addrsF;
-            memClock = 1;
+                stateF = Save_Ram_F;
+                nextA = addrsF;
+                memClock = 1;
             end
         
         Save_Ram_F:
             begin
-            stateF = Next_Addrs;
-            memF = memData;
+                stateF = Next_Addrs;
+                memF = memData;
             end
 
         Next_Addrs:
             begin
-            stateF = Read_Ram_S;
-            nextA = addrsS;
+                stateF = Read_Ram_S;
+                nextA = addrsS;
             end
 
         Read_Ram_S:
             begin
-            state F = Save_Ram_S;
-            nextA = addrsS;
-            memS = memData;
+                stateF = Save_Ram_S;
+                nextA = addrsS;
+                memS = memData;
             end
 
         Save_Ram_S:
             begin
-            stateF = Write_S;
-            nextA = addrsS;
-            memClock = 1;
-            memS = memData;
+                stateF = Write_S;
+                nextA = addrsS;
+                memClock = 1;
+                memS = memData;
             end
 
         Write_S:
             begin
-            stateF = Return_Addrs;
-            memClock = 1;
-            wren = 1;
-            newData = memF;
+                stateF = Return_Addrs;
+                memClock = 1;
+                wren = 1;
+                newData = memF;
             end
 
         Return_Addrs:
             begin
-            stateF = Write_F;
-            nextA = addrsF;
+                stateF = Write_F;
+                nextA = addrsF;
             end
 
         Write_F:
             begin
-            stateF = Controler;
-            memClock = 1
-            wren = 1
-            newData = memS;
+                stateF = Controler;
+                memClock = 1;
+                wren = 1;
+                newData = memS;
             end
 
         Controler:
@@ -160,14 +160,16 @@ begin
 
         Change_Addrs:
             begin
-            stateF = Read_Ram_F;
-            nextA = addrsF;
+                stateF = Read_Ram_F;
+                nextA = addrsF;
             end
 
         Shuffled:
             begin
-            finish = 1;
-            stateF = Shuffled;
+                finish = 1;
+                stateF = Shuffled;
             end
+    endcase
 end
+
 endmodule
